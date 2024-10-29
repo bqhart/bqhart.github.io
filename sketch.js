@@ -56,10 +56,12 @@ function draw() {
   let currentTime = timeSeries[timeIndex]; // Get the current time value
   let currentVaporFlow = vaporFlowData[timeIndex] || [];
   let currentTemperature = temperatureData[timeIndex] || [];
+  let currentLiquidLevel = liquidLevelData[timeIndex] || [];
 
   console.log(`Time: ${currentTime}`);
   console.log(`Vapour Flow: ${currentVaporFlow}`);
   console.log(`Temperature: ${currentTemperature}`);
+  console.log(`Liquid Level: ${currentLiquidLevel}`);
   console.log(`vapourUnits${vaporUnits[1]}`)
 
   // Display the time value on the canvas
@@ -110,6 +112,9 @@ function draw() {
     textAlign(LEFT, CENTER);
     let tempValue = currentTemperature[trayIndex] || 0;
     text(`Tray Temperature: ${tempValue} ${temperatureUnits[1]}`, width / 2 + width / 8, tempHeight);
+
+    let levelValue = currentLiquidLevel[trayIndex] || 0;
+    text(`Holdup Level: ${levelValue} ${headerUnits[1]}`, width / 2 + width / 8, tempHeight - 12);
   }
 
 
