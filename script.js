@@ -3,6 +3,7 @@ document.getElementById('loadCSVButton').addEventListener('click', function () {
     const liquidLevelFile = document.getElementById('liquidLevel').files[0];
     const trayTempFile = document.getElementById('trayTemp').files[0];
     const vapourFlowFile = document.getElementById('vapourFlow').files[0];
+    const PSVFile = document.getElementById('PSV').files[0];
   
     // Load each CSV file if selected
     if (liquidLevelFile) {
@@ -22,6 +23,12 @@ document.getElementById('loadCSVButton').addEventListener('click', function () {
     } else {
       console.warn("Please select a Vapour Flow CSV file.");
     }
+
+    if (PSVFile) {
+      loadPSVFile(PSVFile, 'PSVData');
+    } else {
+      console.warn("Please select a PSV Data CSV file.");
+    }
   });
 
   function getLiquidLevelData() {
@@ -34,6 +41,10 @@ document.getElementById('loadCSVButton').addEventListener('click', function () {
   
   function getVapourFlowData() {
     return window.vapourFlowData || [];
+  }
+
+  function getPSVData() {
+    return window.PSVData || [];
   }
   
   function getTimeSeries() {
@@ -91,3 +102,55 @@ document.getElementById('loadCSVButton').addEventListener('click', function () {
     };
   }
   
+
+  function loadPSVFile(file, variableName) {
+    const reader = new FileReader();
+    reader.onload = function (event) {
+        const csvData = event.target.result;
+
+        const parsedData = parsePSV(csvData);
+
+        // Assign parsed values to global window object
+        window.columnPressure = parsedData.columnPressure || [];
+        window.reliefRate = parsedData.reliefRate || [];
+        window.pressureUnits = parsedData.pressureUnits || '';
+        window.reliefRateUnits = parsedData.reliefRateUnits || '';
+        window[`${variableName}TimeSeries`] = parsedData.timeSeries || [];
+
+        console.log(window.reliefRate)
+    };
+    reader.readAsText(file);
+  }
+
+  function parsePSV(data) {
+    const rows = data.split('\n').filter(Boolean); // Split by new lines and remove empty rows
+
+    if (rows.length < 2) {
+        console.warn("PSV data does not contain enough rows.");
+        return {
+            columnPressure: [],
+            reliefRate: [],
+            timeSeries: [],
+            pressureUnits: '',
+            reliefRateUnits: ''
+        };
+    }
+
+    const headerUnits = rows[1].split(',').map((unit) => unit.trim()); // Extract units from the second row
+    const dataRows = rows.slice(2); // Data starts from the third row
+
+    const timeSeries = dataRows.map(row => row.split(',')[0].trim());
+    const columnPressure = dataRows.map(row => parseFloat(row.split(',')[1].trim()) || 0); // Convert to float
+    const reliefRate = dataRows.map(row => parseFloat(row.split(',')[2].trim()) || 0); // Convert to float
+    
+    console.log(reliefRate);
+    console.log(headerUnits[2]);
+
+    return {
+        columnPressure,
+        reliefRate,
+        timeSeries,
+        pressureUnits: headerUnits[1] || '', // Pressure units
+        reliefRateUnits: headerUnits[2] || '' // Relief rate units
+    };
+}
