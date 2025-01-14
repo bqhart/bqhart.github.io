@@ -16,6 +16,9 @@ let pressureUnits = [];
 let reliefRateUnits = [];
 let columnPressure = [];
 let reliefRate = [];
+let isPaused = false;
+let defaultFramerate = 30;
+
 
 function preload(){
 
@@ -23,14 +26,47 @@ function preload(){
 
 function setup() {
   createCanvas(600, 600);
-  frameRate(50);
+  frameRate(defaultFramerate);
+
+  // Set the initial framerate
+  frameRate(defaultFramerate);
+
+  // Play/Pause button
+  const playPauseButton = document.getElementById('playPauseButton');
+  playPauseButton.addEventListener('click', () => {
+    isPaused = !isPaused;
+    playPauseButton.textContent = isPaused ? 'Play' : 'Pause';
+  });
+
+  // Reset button
+  const resetButton = document.getElementById('resetButton');
+  resetButton.addEventListener('click', () => {
+    resetSimulation();
+  });
+
+  // Framerate slider
+  const framerateSlider = document.getElementById('framerateSlider');
+  const framerateValue = document.getElementById('framerateValue');
+  framerateSlider.addEventListener('input', () => {
+    const newFramerate = parseInt(framerateSlider.value, 10);
+    frameRate(newFramerate);
+    framerateValue.textContent = newFramerate;
+  });
 
 }
 
 function draw() {
-
+  if (isPaused) return;
   background(220);
 
+   // Framerate slider
+   const framerateSlider = document.getElementById('framerateSlider');
+   const framerateValue = document.getElementById('framerateValue');
+   framerateSlider.addEventListener('input', () => {
+     const newFramerate = parseInt(framerateSlider.value, 10);
+     frameRate(newFramerate);
+     framerateValue.textContent = newFramerate;
+   });
 
   liquidLevelData = window.liquidLevelData || [];
   timeSeries = window.liquidLevelDataTimeSeries || [];
@@ -237,6 +273,14 @@ function draw() {
   }
 
   timeIndex++;
+}
+
+function resetSimulation() {
+  // Reset simulation variables
+  isPaused = false;
+  timeIndex = 0;
+  // Update Play/Pause button text
+  document.getElementById('playPauseButton').textContent = 'Pause';
 }
 
 class Bubble {
