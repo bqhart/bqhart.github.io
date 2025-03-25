@@ -120,9 +120,9 @@ function draw() {
   textSize(16);
   textAlign(LEFT, TOP);
   text(`Time: ${currentTime} ${headerUnits[0] || ''}`, 10, 10);
-  text(`Relief Rate: ${currentReliefRate} ${reliefRateUnits || ''}`, 400, 25);
+  text(`Relief Rate: ${(currentReliefRate).toFixed(1)} ${reliefRateUnits || ''}`, 400, 25);
   textAlign(RIGHT,TOP);
-  text(`Pressure: ${currentPressure} ${pressureUnits || ''}`, width-10, 10);
+  text(`Pressure: ${(currentPressure).toFixed(1)} ${pressureUnits || ''}`, width-10, 10);
   
 
   if (timeIndex === 0) {
@@ -156,8 +156,8 @@ function draw() {
   line(0,7*height/8-5,width/2-width/10,7*height/8-5);
   triangle(width/2-width/10, 7*height/8-5, width/2-width/10-arrowSize, 7*height/8-5+arrowSize/2, width/2-width/10-arrowSize, 7*height/8-5-arrowSize/2);
   
-  
-  if(currentReliefRate>0){
+  //Indicates if PSV is relieving above certain rate.
+  if(currentReliefRate>20){
     fill(255,0,0);
   }
   //Drawing PSV
@@ -192,14 +192,14 @@ function draw() {
     fill(0); // Black text color
     textSize(12);
     textAlign(RIGHT, CENTER);
-    let vaporValue = currentVaporFlow[trayIndex] || 0;
+    let vaporValue = (currentVaporFlow[trayIndex] || 0).toFixed(1);
     text(`Vapor Flow: ${vaporValue} ${vaporUnits[1]}`, width / 2 - width / 8, tempHeight);
 
     textAlign(LEFT, CENTER);
-    let tempValue = currentTemperature[trayIndex] || 0;
+    let tempValue = (currentTemperature[trayIndex] || 0).toFixed(1);
     text(`Tray Temperature: ${tempValue} ${temperatureUnits[1]}`, width / 2 + width / 8, tempHeight);
 
-    let levelValue = currentLiquidLevel[trayIndex] || 0;
+    let levelValue = (currentLiquidLevel[trayIndex] || 0).toFixed(1);
     text(`Holdup Level: ${levelValue} ${headerUnits[1]}`, width / 2 + width / 8, tempHeight - 12);
 
     // Adjust the probability of bubble creation based on vapor flow
@@ -218,8 +218,8 @@ function draw() {
 
 
   //Drawing liquid hold up and temperature
-  let maxTemp = Math.max(...temperatureData.flat());
-  let minTemp = Math.min(...temperatureData.flat());
+  let maxTemp = temperatureData.flat().reduce((max, val) => Math.max(max, val), -Infinity);
+  let minTemp = temperatureData.flat().reduce((min, val) => Math.min(min, val), Infinity);
 
   console.log(maxTemp);
  
