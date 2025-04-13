@@ -92,6 +92,16 @@ function draw() {
     return;
   }
 
+  let startTimeFromInput = 0; // default value
+
+  document.getElementById("setTimeButton").addEventListener("click", () => {
+    const input = document.getElementById("timeInput").value;
+    startTimeFromInput = parseFloat(input);
+    if (!isNaN(startTimeFromInput)) {
+      timeIndex = Math.floor(startTimeFromInput)*10; 
+    }
+  });
+
   // Check if timeIndex exceeds available data
   if (timeIndex >= liquidLevelData.length) {
     timeIndex = 0; // Reset to 0 if we exceed the length

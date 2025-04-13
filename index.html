@@ -35,10 +35,39 @@
     <script src="sketch.js"></script>
     <script src="script.js"></script>
 
-    <button id="playPauseButton">Pause</button>
+    <!-- <button id="playPauseButton">Pause</button>
     <button id="resetButton">Reset</button>
+
+    <label for="timeInput">Enter Start Time (s):</label>
+    <input type="number" id="timeInput" step="1" min="0" />
+    <button id="setTimeButton">Set Time</button>
+
     <label for="framerateSlider">Framerate:</label>
     <input type="range" id="framerateSlider" min="1" max="100" value="50">
-    <span id="framerateValue">50</span> fps
+    <span id="framerateValue">50</span> fps -->
+
+  <!-- Animation Controls -->
+  <div id="controls" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc; display: inline-block;">
+  <h3>Animation Controls</h3>
+  
+  <!-- Pause/Play Button -->
+  <button id="playPauseButton">Pause</button>
+
+  <!-- Reset Button -->
+  <button id="resetButton">Reset</button>
+
+  <!-- Framerate Control -->
+  <label for="framerateSlider">Framerate:</label>
+  <input type="range" id="framerateSlider" min="1" max="100" value="50">
+  <span id="framerateValue">50</span> fps
+
+  <br><br>
+
+  <!-- Jump to Time Control -->
+  <label for="timeInput">Go to Time (s):</label>
+  <input type="number" id="timeInput" step="0.1" min="0" style="width: 80px;">
+  <button id="setTimeButton">Set Time</button>
+  </div>
+    
   </body>
 </html>
